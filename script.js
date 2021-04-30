@@ -1,6 +1,6 @@
-document.getElementById("weatherSubmit").addEventListener("click", function(event) {
+document.getElementById("covidSubmit").addEventListener("click", function(event) {
   event.preventDefault();
-  var value = document.getElementById("weatherInput").value;
+  var value = document.getElementById("covidInput").value;
   value = value.charAt(0).toUpperCase() + value.slice(1);
   if (value === "")
     return;
@@ -21,11 +21,25 @@ document.getElementById("weatherSubmit").addEventListener("click", function(even
         results += "<p>Total deaths: " + formatNumber(json.All.deaths) + "</p>";
         results += "<p>Recovered: " + formatNumber(json.All.recovered) + "</p>";
         results += "</p>";
-    document.getElementById("weatherResults").innerHTML = results;
+        console.log(json);
+    document.getElementById("covidGeneralResults").innerHTML = results;
       });
 
-  const url2 = "https://covid-api.mmediagroup.fr/v1/vaccines?country=" + value;
-    fetch(url2)
+  const url2 = "https://covid-api.mmediagroup.fr/v1/vaccines?country=";
+  var inputValue = value;
+  if (value.search(",") != -1) {
+    inputValue = value.split(', ');
+    var newValue = inputValue[1] + " " + inputValue[0];
+    console.log(newValue);
+    console.log(inputValue)
+  }
+  else {
+    newValue = value;
+  }
+
+  const urlFinal = url2 + newValue;
+  console.log(urlFinal)
+    fetch(urlFinal)
       .then(function(response) {
         return response.json();
       }).then(function(json) {
@@ -35,7 +49,7 @@ document.getElementById("weatherSubmit").addEventListener("click", function(even
         forecast += '<p>People vaccinated: ' + formatNumber(json.All.people_vaccinated) + '</p>';
         forecast += '<p>People partially vaccinated: ' + formatNumber(json.All.people_partially_vaccinated) + '</p>';
         console.log(json);
-      document.getElementById("forecastResults").innerHTML = forecast;
+      document.getElementById("covidVaccineResults").innerHTML = forecast;
       });
 
       const url3 = "https://covid-api.mmediagroup.fr/v1/history?country=" + value + "&status=deaths";
